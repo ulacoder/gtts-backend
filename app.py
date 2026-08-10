@@ -25,7 +25,9 @@ def generate_speech():
         print(f"Request content type: {request.content_type}")
         print(f"Request data: {request.data}")
 
-        data = request.get_json(force=True)
+        # Parse JSON manually with UTF-8 encoding
+        import json
+        data = json.loads(request.data.decode('utf-8'))
         print(f"Parsed JSON: {data}")
 
         text = data.get('text', '')
