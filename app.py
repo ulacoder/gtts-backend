@@ -14,7 +14,7 @@ def health():
 @app.route('/tts', methods=['POST'])
 def generate_speech():
     try:
-        data = request.json
+        data = request.get_json(force=True)
         text = data.get('text', '')
         language = data.get('language', 'ru')  # Default to Russian
 
