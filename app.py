@@ -14,12 +14,20 @@ def health():
 @app.route('/tts', methods=['POST'])
 def generate_speech():
     try:
+        # Log request details for debugging
+        print(f"Request content type: {request.content_type}")
+        print(f"Request data: {request.data}")
+
         data = request.get_json(force=True)
+        print(f"Parsed JSON: {data}")
+
         text = data.get('text', '')
         language = data.get('language', 'ru')  # Default to Russian
 
         if not text:
             return jsonify({"error": "No text provided"}), 400
+
+        print(f"Generating TTS for text: {text}, language: {language}")
 
         # Generate speech using Google TTS
         tts = gTTS(text=text, lang=language, slow=False)
@@ -29,6 +37,8 @@ def generate_speech():
         tts.write_to_fp(mp3_buffer)
         mp3_buffer.seek(0)
 
+        print(f"TTS generated successfully, buffer size: {mp3_buffer.getbuffer().nbytes}")
+
         return send_file(
             mp3_buffer,
             mimetype='audio/mpeg',
@@ -37,6 +47,8 @@ def generate_speech():
 
     except Exception as e:
         print(f"Error: {e}")
+        import traceback
+        traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
