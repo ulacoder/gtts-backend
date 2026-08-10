@@ -3,9 +3,16 @@ from flask_cors import CORS
 from gtts import gTTS
 import io
 import os
+import sys
+
+# Force UTF-8 encoding
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
 
 app = Flask(__name__)
 CORS(app)
+app.config['JSON_AS_ASCII'] = False
 
 @app.route('/health', methods=['GET'])
 def health():
